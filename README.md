@@ -28,3 +28,8 @@ bash-4.2# source ve/bin/activate
 (ve) bash-4.2# pip install zappa
 (ve) bash-4.2# zappa init
 ```
+
+```bash
+$ zappa deploy dev
+$ zappa update dev
+```
