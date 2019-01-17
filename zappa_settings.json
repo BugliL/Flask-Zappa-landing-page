@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "app_function": "main_app.app",
+        "aws_region": "eu-west-1",
+        "profile_name": "zappa",
+        "project_name": "task",
+        "runtime": "python3.6",
+        "s3_bucket": "zappa-cszcjjgia"
+    }
+}
