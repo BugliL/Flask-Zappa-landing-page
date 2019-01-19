@@ -17,6 +17,7 @@ def save():
         unique_filename = str(uuid.uuid4()) + '.txt'
         file_path = dirname + '/' + unique_filename
 
+        d['created2'] = datetime.now().isoformat()
         serialized_data = str(d)
         encoded_string = config.secret_encode(serialized_data)
 
