@@ -11,7 +11,7 @@ import uuid
 app = Flask(__name__)
 
 
-@app.route('/save', methods=['POST'])
+@app.route('/save', methods=['POST', 'OPTIONS'])
 def save():
     d = request.json
     if d:
@@ -31,7 +31,7 @@ def save():
 
         return jsonify(d), 200
 
-    return '', 405  # Bad request
+    return '', 200  # Bad request
 
 
 @app.route('/fannel-report', methods=['GET'])
@@ -108,6 +108,10 @@ def fannel_report_csv():
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    response.headers.add(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+    )
     return response
 
 
