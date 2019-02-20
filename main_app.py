@@ -115,6 +115,27 @@ class ReportData(object):
         return output_list
 
 
+@app.route('/fannel-report-table', methods=['GET'])
+def fannel_report_table():
+    s3 = boto3.resource("s3")
+    bucket = s3.Bucket(config.BUCKET_NAME)
+
+    rd = ReportData(bucket)
+    fields = rd.get_fields()
+
+    style = "<style>td { border: solid 1px black; padding: 4px;}</style>"
+    html_row = lambda arr: "<tr><td>" + "</td><td>".join(arr) + "</td></tr>"
+    data = rd.data
+
+    html = style + '<table>'
+    html += html_row(fields)
+    for d in data:
+        html += html_row([str(d[k]) if k in d.keys() else '' for k in fields])
+    html += '</table>'
+
+    return Response(html)
+
+
 @app.route('/fannel-report-csv', methods=['GET'])
 def fannel_report_csv():
     s3 = boto3.resource("s3")
