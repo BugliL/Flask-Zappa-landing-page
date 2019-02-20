@@ -49,6 +49,28 @@ def fannel_report():
     return jsonify(l), 200
 
 
+@app.route('/readable-fannel-report', methods=['GET'])
+def readable_fannel_report():
+    s3 = boto3.resource("s3")
+    bucket = s3.Bucket(config.BUCKET_NAME)
+
+    l = []
+    for obj in bucket.objects.filter(Prefix=config.DIRECTORY_NAME + "/"):
+        if '.txt' in obj.key:
+            body = obj.get()['Body'].read()
+            d = eval(config.secret_decode(body))
+            l.append(d)
+
+    output_list = []
+    for d in l:
+        created_list = [x['created'] for x in l if d['id_univoco'] == x['id_univoco']]
+        max_value = max(created_list)
+        if d['created'] == max_value:
+            output_list.append(d)
+
+    return jsonify(output_list), 200
+
+
 class ReportData(object):
 
     def __init__(self, bucket):
@@ -82,7 +104,15 @@ class ReportData(object):
                 body = obj.get()['Body'].read()
                 d = eval(config.secret_decode(body))
                 l.append(d)
-        return l
+
+        output_list = []
+        for d in l:
+            created_list = [x['created'] for x in l if d['id_univoco'] == x['id_univoco']]
+            max_value = max(created_list)
+            if d['created'] == max_value:
+                output_list.append(d)
+
+        return output_list
 
 
 @app.route('/fannel-report-csv', methods=['GET'])
